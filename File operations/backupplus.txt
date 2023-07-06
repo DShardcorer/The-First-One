@@ -1,0 +1,26 @@
+void fileencode(int offset, FILE *fp, char *filename)
+{
+    int c, residual;
+    FILE *tempfile = fopen("tempfile.txt", "w+");
+    while ((c = getc(fp)) != EOF)
+    {
+        if (islower(c + offset) || isupper(c + offset))
+        {
+            c += offset;
+        }
+        else if (islower(c))
+        {
+            residual = c + offset - 'z';
+            c = 'a' + residual - 1;
+        }
+        else
+        {
+            residual = c + offset - 'Z';
+            c = 'A' + residual - 1;
+        }
+        fputc(c, tempfile);
+    }
+    fclose(tempfile);
+    remove(filename);
+    rename("tempfile.txt", filename);
+}
